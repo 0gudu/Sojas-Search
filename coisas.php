@@ -1,10 +1,21 @@
 <?php 
     require_once "connec.php";
-    $nomesite = $_POST['nomesite'];
+    $input = $_POST['nomesite'];
+    $type = $_POST['tipopa'];
 
-    $stmt = $pdo->prepare("SELECT * FROM dados WHERE urls LIKE :nome"); 
-    $stmt->execute([':nome' => '%' . $nomesite . '%']);
-    $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if ($type == 1){
+        $stmt = $pdo->prepare("SELECT * FROM dados WHERE urls LIKE :nome"); 
+        $stmt->execute([':nome' => '%' . $input . '%']);
+        $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }else if ($type == 2) {
+        $stmt = $pdo->prepare("SELECT * FROM dados WHERE email LIKE :nome"); 
+        $stmt->execute([':nome' => '%' . $input . '%']);
+        $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }else {
+        $stmt = $pdo->prepare("SELECT * FROM dados WHERE senha LIKE :nome"); 
+        $stmt->execute([':nome' => '%' . $input . '%']);
+        $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }    
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -16,9 +27,11 @@
 </head>
 <body>
     tabelas com tudo ae mn
+    <hr>
     <table class="table">
         <?php foreach($sites as $c) { ?>
             <tr>
+                <td>id: <?= $c['id_dados']?> </td>
                 <td>url: <?= $c['urls']?> </td>
                 <td>email: <?= $c['email']?> </td>
                 <td>senha: <?= $c['senha']?> </td>

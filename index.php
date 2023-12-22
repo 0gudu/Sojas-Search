@@ -11,6 +11,11 @@
 <body>
     <form action="coisas.php" method="POST">
         <input type="text" name="nomesite">
+        <select name="tipopa">
+            <option value="1">URL</option>
+            <option value="2">EMAIL</option>
+            <option value="3">SENHA</option>
+        </select>
         <input type="submit" value="obter">
     </form>
     
