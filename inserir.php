@@ -6,7 +6,7 @@ $user = 'root';
 $pass = '';
 
 // Nome da tabela
-$tabela = 'bd';
+$tabela = 'dados';
 
 try {
     // Conectar ao banco de dados usando PDO
@@ -14,7 +14,7 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Caminho do arquivo CSV
-    $arquivo_csv = 'C:\wamp64\tmp\ex.txt';
+    $arquivo_csv = $_POST['caminho'];
 
     // Montar a consulta SQL de inserção
     $colunas = ['fds', 'urls', 'email','senha']; // Substitua pelos nomes reais das suas colunas

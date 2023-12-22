@@ -19,6 +19,7 @@
                 <option value="1">URL</option>
                 <option value="2">EMAIL</option>
                 <option value="3">SENHA</option>
+                <option value="4">ID</option>
             </select>
         </div>
         <button type="submit" class="btn btn-primary">Obter</button>
