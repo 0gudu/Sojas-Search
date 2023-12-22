@@ -10,7 +10,7 @@
 
     <form action="coisas.php" method="POST" class="mb-3">
         <div class="mb-3">
-            <label for="nomesite" class="form-label">Nome do Site</label>
+            <label for="nomesite" class="form-label">Nome do dado</label>
             <input type="text" name="nomesite" class="form-control" id="nomesite">
         </div>
         <div class="mb-3">
