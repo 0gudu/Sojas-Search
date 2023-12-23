@@ -12,7 +12,10 @@ try {
     // Conectar ao banco de dados usando PDO
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
+    $nomedb = $_POST['nome'];
+    $stmt = $pdo->prepare("INSERT INTO databasess(names) VALUES (:nome)");
+    $stmt->bindValue(':nome', $nomedb, PDO::PARAM_STR);
+    $stmt->execute();
     // Caminho do arquivo CSV
     $arquivo_csv = $_POST['caminho'];
 
