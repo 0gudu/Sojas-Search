@@ -43,12 +43,3 @@ O **Sojas Search** é um projeto em PHP que permite pesquisar informações no b
 
 4. **Os resultados correspondentes serão exibidos.**
 
-## Contribuição
-
-Sinta-se à vontade para contribuir, relatar problemas ou enviar solicitações de pull.
-
-## Licença
-
-Este projeto está licenciado sob a [Licença MIT](LICENSE).
-```
-
