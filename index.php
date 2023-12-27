@@ -1,5 +1,5 @@
 <?php 
-    require_once "connec.php";
+    require_once "src/includes/connec.php";
     $stmt = $pdo->prepare("SELECT * FROM databasess");
     $stmt->execute();
     $nomes = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -31,18 +31,19 @@
         <span><button type="button" class="btn btn-primary" onclick="exibircoisa()">
                 Ver databases inseridas
             </button>
-            <a href="caminhos.php" class="btn btn-secondary me-5" role="button">Inserir data</a></span>
+            <a href="src/php/caminhos.php" class="btn btn-secondary me-5" role="button">Inserir data (xampp)</a></span>
 
     </nav>
     <div class="conteiner mt-5">
         <p class="display-1">SOJAS SEARCH</p>
     </div>
     <div class="container mt-5">
-        <form action="coisas.php" method="GET" class="mb-3">
+        <form action="src/php/coisas.php" method="GET" class="mb-3">
+            <input type="hidden" name="qnts" id="qnts" value="50">
             <div class="row align-items-end">
                 <div class="col-md-9">
                     <label for="nomesite" class="form-label">Nome do dado</label>
-                    <input type="text" name="nomesite" class="form-control" id="nomesite">
+                    <input type="text" name="nomesite" class="form-control" id="nomesite" required>
                 </div>
                 <div class="col-md-2">
                     <label for="tipopa" class="form-label">Tipo de Dado</label>
