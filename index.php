@@ -3,6 +3,11 @@
     $stmt = $pdo->prepare("SELECT * FROM databasess");
     $stmt->execute();
     $nomes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        $stmt = $pdo->prepare("SHOW INDEX FROM dados");
+        $stmt->execute();
+        $idx = $stmt->rowCount();
+    
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -31,7 +36,9 @@
         <span><button type="button" class="btn btn-primary" onclick="exibircoisa()">
                 Ver databases inseridas
             </button>
-            <a href="src/php/caminhos.php" class="btn btn-secondary me-5" role="button">Inserir data (xampp)</a></span>
+            <a href="src/php/caminhos.php" class="btn btn-secondary me-5" role="button">Inserir data (xampp)</a>
+            
+            <a href="src/php/indices.php" class="btn btn-danger me-5" role="button" id="idx">COLOCAR INDICES</a></span>
 
     </nav>
     <div class="conteiner mt-5">
@@ -92,6 +99,10 @@
     <!-- Inclua a biblioteca jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
+        idx = <?=$idx?>;
+        if (idx > 0){
+            $("#idx").hide();
+        }
         function exibircoisa() {
             $(".databaseDiv").toggle();
         }

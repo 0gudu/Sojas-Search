@@ -55,7 +55,7 @@ if ($type == 1){
     <title>Procurador de Dados</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
-<body >
+<body>
     <nav class="navbar bg-dark">
         <a class="navbar-brand text-white m-2" href="../../index.php"><h5>arthuro enterprises</h5></a>
         <a href="../../index.php" class="btn btn-secondary me-5" role="button"><-Voltar</a>
