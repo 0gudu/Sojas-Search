@@ -14,7 +14,7 @@ $pagina = isset($_GET['pagina']) ? $_GET['pagina'] : 1;
 $quantidade = intval($_GET['qnts']);
 
 $climit = ($quantidade * $pagina) - $quantidade;
-
+$ultimoid = $_GET['ultimoid'];
 $input = $_GET['nomesite'];
 $type = $_GET['tipopa'];
 
@@ -45,6 +45,37 @@ if ($type == 1){
     $stmt->bindValue(':quantidade', $quantidade, PDO::PARAM_INT);
     $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+/*
+if ($type == 1){
+    $stmt = $pdo->prepare('SELECT * FROM dados WHERE id_dados > :ultimoid AND urls LIKE :input LIMIT :quantidade');
+    $stmt->bindValue(':ultimoid', $ultimoid, PDO::PARAM_INT);
+    $stmt->bindValue(':input', '%' . $input . '%', PDO::PARAM_STR);
+    $stmt->bindValue(':quantidade', $quantidade, PDO::PARAM_INT);
+    $stmt->execute();
+    $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} else if ($type == 2) {
+    $stmt = $pdo->prepare('SELECT * FROM dados WHERE id_dados > :ultimoid AND email LIKE :input LIMIT :quantidade');
+    $stmt->bindValue(':ultimoid', $ultimoid, PDO::PARAM_INT);
+    $stmt->bindValue(':input', '%' . $input . '%', PDO::PARAM_STR);
+    $stmt->bindValue(':quantidade', $quantidade, PDO::PARAM_INT);
+    $stmt->execute();
+    $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} else if ($type == 3){
+    $stmt = $pdo->prepare('SELECT * FROM dados WHERE id_dados > :ultimoid AND senha LIKE :input LIMIT :quantidade');
+    $stmt->bindValue(':ultimoid', $ultimoid, PDO::PARAM_INT);
+    $stmt->bindValue(':input', '%' . $input . '%', PDO::PARAM_STR);
+    $stmt->bindValue(':quantidade', $quantidade, PDO::PARAM_INT);
+    $stmt->execute();
+    $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}else {
+    $stmt = $pdo->prepare('SELECT * FROM dados WHERE id_dados > :ultimoid AND id_dados LIKE :input LIMIT :quantidade');
+    $stmt->bindValue(':ultimoid', $ultimoid, PDO::PARAM_INT);
+    $stmt->bindValue(':input', '%' . $input . '%', PDO::PARAM_STR);
+    $stmt->bindValue(':quantidade', $quantidade, PDO::PARAM_INT);
+    $stmt->execute();
+    $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}*/
 ?>
 
 <!DOCTYPE html>
@@ -99,7 +130,7 @@ if ($type == 1){
                         <td></td>
                     </tr>
                 <?php } ?>
-            <?php } ?>
+            <?php } $ultimoid = $c['id_dados'];?>
         </tbody>
     </table>
     
@@ -141,7 +172,7 @@ if ($type == 1){
         <?php
         if ($pagina != 1){
             $prevpage = $pagina - 1;
-            echo "<li class='page-item'><a class='page-link' href='?nomesite=$input&tipopa=$type&pagina=$prevpage&qnts=$quantidade'>Anterior</a></li>";
+            echo "<li class='page-item'><a class='page-link' href='?nomesite=$input&tipopa=$type&pagina=$prevpage&qnts=$quantidade&ultimoid=$ultimoid'>Anterior</a></li>";
         }
         
         for ($n = 1; $n <= $npagina; $n++) {
@@ -149,7 +180,7 @@ if ($type == 1){
                 if ($n == $pagina) {
                     echo "<li class='page-item active'><span class='page-link'>$n</span></li>";
                 } else {
-                    echo "<li class='page-item'><a class='page-link' href='?nomesite=$input&tipopa=$type&pagina=$n&qnts=$quantidade'>$n</a></li>";
+                    echo "<li class='page-item'><a class='page-link' href='?nomesite=$input&tipopa=$type&pagina=$n&qnts=$quantidade&ultimoid=$ultimoid'>$n</a></li>";
                 }
             }
             
@@ -158,7 +189,7 @@ if ($type == 1){
 
         if ($pagina != $npagina){
             $nextpage = $pagina + 1;
-            echo "<li class='page-item'><a class='page-link' href='?nomesite=$input&tipopa=$type&pagina=$nextpage&qnts=$quantidade'>Proxima</a></li>";
+            echo "<li class='page-item'><a class='page-link' href='?nomesite=$input&tipopa=$type&pagina=$nextpage&qnts=$quantidade&ultimoid=$ultimoid'>Proxima</a></li>";
         }
 
     ?>
@@ -193,16 +224,16 @@ if ($type == 1){
             }
         }
         function mudarqntpagina() {
-    var qntsValue = $('#qnts').val(); 
-
+    var qntsValue = $('#qnts').val();
 
     var novaURL = "?nomesite=" + encodeURIComponent("<?=$_GET['nomesite']?>") +
                   "&tipopa=" + encodeURIComponent("<?=$_GET['tipopa']?>") +
                   "&pagina=" + encodeURIComponent(1) +
-                  "&qnts=" + encodeURIComponent(qntsValue);
-
+                  "&qnts=" + encodeURIComponent(qntsValue) +  
+                  "&ultimoid=" + encodeURIComponent(0);
     window.location.href = novaURL;
 }
+
 
     </script>
 </body>
