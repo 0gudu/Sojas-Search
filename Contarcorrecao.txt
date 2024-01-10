@@ -1,0 +1,10 @@
+//comando substituto para colocar no lugar dos quatro tipos anteriores 
+
+$stmt = $pdo->prepare("SELECT COUNT(*) FROM id_dados WHERE TIPODEDADO LIKE :nome");
+$stmt->bindValue(':nome', '%' . $input . '%', PDO::PARAM_STR);
+$stmt->execute();
+$quant = $stmt->fetchColumn();
+
+//comando para corrigir a ligação do valor total de resultados com a variável 
+echo "Total de resultados: " . $quant;
+$npagina = ceil($quant / $quantidade);
