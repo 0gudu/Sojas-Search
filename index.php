@@ -46,7 +46,7 @@
     </div>
     <div class="container mt-5">
         <form action="src/php/coisas.php" method="GET" class="mb-3">
-        <input type="hidden" name="ultimoid" id="qnts" value="0">
+            <input type="hidden" name="ultimoid" id="qnts" value="0">
             <input type="hidden" name="qnts" id="qnts" value="50">
             <div class="row align-items-end">
                 <div class="col-md-9">
@@ -66,6 +66,8 @@
                     <button type="submit" class="btn btn-primary">Pesquisar</button>
                 </div>
             </div>
+            <label for="beta">Função beta, tem bugs</label>
+            <input type="checkbox" id="beta" name="beta">
         </form>
     </div>
     <div class="databaseDiv">

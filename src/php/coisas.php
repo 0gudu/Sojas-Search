@@ -18,64 +18,73 @@ $ultimoid = $_GET['ultimoid'];
 $input = $_GET['nomesite'];
 $type = $_GET['tipopa'];
 
-if ($type == 1){
-    $stmt = $pdo->prepare('SELECT * FROM dados WHERE urls LIKE :nome LIMIT :climit, :quantidade');
-    $stmt->bindValue(':nome', '%' . $input . '%', PDO::PARAM_STR);
-    $stmt->bindValue(':climit', $climit, PDO::PARAM_INT);
-    $stmt->bindValue(':quantidade', $quantidade, PDO::PARAM_INT);
-    $stmt->execute();
+//arrumar pq nn volta a func
+$funcnova = isset($_GET['beta']) && $_GET['beta'] === 'on' ? 'on' : 'off';
 
-    $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} else if ($type == 2) {
-    $stmt = $pdo->prepare("SELECT * FROM dados WHERE email LIKE :nome LIMIT :climit, quantidade"); 
-    $stmt->bindValue(':nome', '%' . $input . '%', PDO::PARAM_STR);
-    $stmt->bindValue(':climit', $climit, PDO::PARAM_INT);
-    $stmt->bindValue(':quantidade', $quantidade, PDO::PARAM_INT);
-    $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} else if ($type == 3){
-    $stmt = $pdo->prepare("SELECT * FROM dados WHERE senha LIKE :nome LIMIT :climit, quantidade"); 
-    $stmt->bindValue(':nome', '%' . $input . '%', PDO::PARAM_STR);
-    $stmt->bindValue(':climit', $climit, PDO::PARAM_INT);
-    $stmt->bindValue(':quantidade', $quantidade, PDO::PARAM_INT);
-    $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+if ($funcnova == "off"){
+    if ($type == 1){
+        $stmt = $pdo->prepare('SELECT * FROM dados WHERE urls LIKE :nome LIMIT :climit, :quantidade');
+        $stmt->bindValue(':nome', '%' . $input . '%', PDO::PARAM_STR);
+        $stmt->bindValue(':climit', $climit, PDO::PARAM_INT);
+        $stmt->bindValue(':quantidade', $quantidade, PDO::PARAM_INT);
+        $stmt->execute();
+    
+        $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } else if ($type == 2) {
+        $stmt = $pdo->prepare("SELECT * FROM dados WHERE email LIKE :nome LIMIT :climit, quantidade"); 
+        $stmt->bindValue(':nome', '%' . $input . '%', PDO::PARAM_STR);
+        $stmt->bindValue(':climit', $climit, PDO::PARAM_INT);
+        $stmt->bindValue(':quantidade', $quantidade, PDO::PARAM_INT);
+        $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } else if ($type == 3){
+        $stmt = $pdo->prepare("SELECT * FROM dados WHERE senha LIKE :nome LIMIT :climit, quantidade"); 
+        $stmt->bindValue(':nome', '%' . $input . '%', PDO::PARAM_STR);
+        $stmt->bindValue(':climit', $climit, PDO::PARAM_INT);
+        $stmt->bindValue(':quantidade', $quantidade, PDO::PARAM_INT);
+        $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }else {
+        $stmt = $pdo->prepare("SELECT * FROM dados WHERE id_dados LIKE :nome LIMIT :climit, quantidade");
+        $stmt->bindValue(':nome', '%' . $input . '%', PDO::PARAM_STR);
+        $stmt->bindValue(':climit', $climit, PDO::PARAM_INT);
+        $stmt->bindValue(':quantidade', $quantidade, PDO::PARAM_INT);
+        $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }else {
-    $stmt = $pdo->prepare("SELECT * FROM dados WHERE id_dados LIKE :nome LIMIT :climit, quantidade");
-    $stmt->bindValue(':nome', '%' . $input . '%', PDO::PARAM_STR);
-    $stmt->bindValue(':climit', $climit, PDO::PARAM_INT);
-    $stmt->bindValue(':quantidade', $quantidade, PDO::PARAM_INT);
-    $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if ($type == 1){
+        $stmt = $pdo->prepare('SELECT * FROM dados WHERE id_dados > :ultimoid AND urls LIKE :input LIMIT :quantidade');
+        $stmt->bindValue(':ultimoid', $ultimoid, PDO::PARAM_INT);
+        $stmt->bindValue(':input', '%' . $input . '%', PDO::PARAM_STR);
+        $stmt->bindValue(':quantidade', $quantidade, PDO::PARAM_INT);
+        $stmt->execute();
+        $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } else if ($type == 2) {
+        $stmt = $pdo->prepare('SELECT * FROM dados WHERE id_dados > :ultimoid AND email LIKE :input LIMIT :quantidade');
+        $stmt->bindValue(':ultimoid', $ultimoid, PDO::PARAM_INT);
+        $stmt->bindValue(':input', '%' . $input . '%', PDO::PARAM_STR);
+        $stmt->bindValue(':quantidade', $quantidade, PDO::PARAM_INT);
+        $stmt->execute();
+        $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } else if ($type == 3){
+        $stmt = $pdo->prepare('SELECT * FROM dados WHERE id_dados > :ultimoid AND senha LIKE :input LIMIT :quantidade');
+        $stmt->bindValue(':ultimoid', $ultimoid, PDO::PARAM_INT);
+        $stmt->bindValue(':input', '%' . $input . '%', PDO::PARAM_STR);
+        $stmt->bindValue(':quantidade', $quantidade, PDO::PARAM_INT);
+        $stmt->execute();
+        $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }else {
+        $stmt = $pdo->prepare('SELECT * FROM dados WHERE id_dados > :ultimoid AND id_dados LIKE :input LIMIT :quantidade');
+        $stmt->bindValue(':ultimoid', $ultimoid, PDO::PARAM_INT);
+        $stmt->bindValue(':input', '%' . $input . '%', PDO::PARAM_STR);
+        $stmt->bindValue(':quantidade', $quantidade, PDO::PARAM_INT);
+        $stmt->execute();
+        $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 
+
 /*
-if ($type == 1){
-    $stmt = $pdo->prepare('SELECT * FROM dados WHERE id_dados > :ultimoid AND urls LIKE :input LIMIT :quantidade');
-    $stmt->bindValue(':ultimoid', $ultimoid, PDO::PARAM_INT);
-    $stmt->bindValue(':input', '%' . $input . '%', PDO::PARAM_STR);
-    $stmt->bindValue(':quantidade', $quantidade, PDO::PARAM_INT);
-    $stmt->execute();
-    $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} else if ($type == 2) {
-    $stmt = $pdo->prepare('SELECT * FROM dados WHERE id_dados > :ultimoid AND email LIKE :input LIMIT :quantidade');
-    $stmt->bindValue(':ultimoid', $ultimoid, PDO::PARAM_INT);
-    $stmt->bindValue(':input', '%' . $input . '%', PDO::PARAM_STR);
-    $stmt->bindValue(':quantidade', $quantidade, PDO::PARAM_INT);
-    $stmt->execute();
-    $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} else if ($type == 3){
-    $stmt = $pdo->prepare('SELECT * FROM dados WHERE id_dados > :ultimoid AND senha LIKE :input LIMIT :quantidade');
-    $stmt->bindValue(':ultimoid', $ultimoid, PDO::PARAM_INT);
-    $stmt->bindValue(':input', '%' . $input . '%', PDO::PARAM_STR);
-    $stmt->bindValue(':quantidade', $quantidade, PDO::PARAM_INT);
-    $stmt->execute();
-    $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
-}else {
-    $stmt = $pdo->prepare('SELECT * FROM dados WHERE id_dados > :ultimoid AND id_dados LIKE :input LIMIT :quantidade');
-    $stmt->bindValue(':ultimoid', $ultimoid, PDO::PARAM_INT);
-    $stmt->bindValue(':input', '%' . $input . '%', PDO::PARAM_STR);
-    $stmt->bindValue(':quantidade', $quantidade, PDO::PARAM_INT);
-    $stmt->execute();
-    $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
-}*/
+*/
 ?>
 
 <!DOCTYPE html>
@@ -172,7 +181,7 @@ if ($type == 1){
         <?php
         if ($pagina != 1){
             $prevpage = $pagina - 1;
-            echo "<li class='page-item'><a class='page-link' href='?nomesite=$input&tipopa=$type&pagina=$prevpage&qnts=$quantidade&ultimoid=$ultimoid'>Anterior</a></li>";
+            echo "<li class='page-item'><a class='page-link' href='?nomesite=$input&tipopa=$type&pagina=$prevpage&qnts=$quantidade&ultimoid=$ultimoid&beta=$funcnova'>Anterior</a></li>";
         }
         
         for ($n = 1; $n <= $npagina; $n++) {
@@ -180,7 +189,7 @@ if ($type == 1){
                 if ($n == $pagina) {
                     echo "<li class='page-item active'><span class='page-link'>$n</span></li>";
                 } else {
-                    echo "<li class='page-item'><a class='page-link' href='?nomesite=$input&tipopa=$type&pagina=$n&qnts=$quantidade&ultimoid=$ultimoid'>$n</a></li>";
+                    echo "<li class='page-item'><a class='page-link' href='?nomesite=$input&tipopa=$type&pagina=$n&qnts=$quantidade&ultimoid=$ultimoid&beta=$funcnova'>$n</a></li>";
                 }
             }
             
@@ -189,7 +198,7 @@ if ($type == 1){
 
         if ($pagina != $npagina){
             $nextpage = $pagina + 1;
-            echo "<li class='page-item'><a class='page-link' href='?nomesite=$input&tipopa=$type&pagina=$nextpage&qnts=$quantidade&ultimoid=$ultimoid'>Proxima</a></li>";
+            echo "<li class='page-item'><a class='page-link' href='?nomesite=$input&tipopa=$type&pagina=$nextpage&qnts=$quantidade&ultimoid=$ultimoid&beta=$funcnova'>Proxima</a></li>";
         }
 
     ?>
@@ -227,13 +236,14 @@ if ($type == 1){
     var qntsValue = $('#qnts').val();
 
     var novaURL = "?nomesite=" + encodeURIComponent("<?=$_GET['nomesite']?>") +
-                  "&tipopa=" + encodeURIComponent("<?=$_GET['tipopa']?>") +
-                  "&pagina=" + encodeURIComponent(1) +
-                  "&qnts=" + encodeURIComponent(qntsValue) +  
-                  "&ultimoid=" + encodeURIComponent(0);
-    window.location.href = novaURL;
-}
+              "&tipopa=" + encodeURIComponent("<?=$_GET['tipopa']?>") +
+              "&pagina=" + encodeURIComponent(1) +
+              "&qnts=" + encodeURIComponent(qntsValue) +  
+              "&ultimoid=" + encodeURIComponent(0) +
+              "&beta=" + encodeURIComponent("<?php echo $funcnova; ?>");
+window.location.href = novaURL;
 
+        }
 
     </script>
 </body>
