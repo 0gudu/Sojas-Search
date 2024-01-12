@@ -20,8 +20,6 @@ $type = $_GET['tipopa'];
 
 //arrumar pq nn volta a func
 $funcnova = isset($_GET['beta']) && $_GET['beta'] === 'on' ? 'on' : 'off';
-
-
 if ($funcnova == "off"){
     if ($type == 1){
         $stmt = $pdo->prepare('SELECT * FROM dados WHERE urls LIKE :nome LIMIT :climit, :quantidade');
@@ -51,6 +49,7 @@ if ($funcnova == "off"){
         $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }else {
+    $numcontent = 0;
     if ($type == 1){
         $stmt = $pdo->prepare('SELECT * FROM dados WHERE id_dados > :ultimoid AND urls LIKE :input LIMIT :quantidade');
         $stmt->bindValue(':ultimoid', $ultimoid, PDO::PARAM_INT);
@@ -114,7 +113,11 @@ if ($funcnova == "off"){
             </tr>
         </thead>
         <tbody>
-            <?php foreach($sites as $c) { ?>
+            <?php foreach($sites as $c) { 
+                
+                if ($funcnova == "on"){
+                    $numcontent ++;
+                }?>
                 <tr>
                     <td><?= $c['id_dados']?></td>
                     <td><?= $c['fds']?></td>
@@ -139,67 +142,93 @@ if ($funcnova == "off"){
                         <td></td>
                     </tr>
                 <?php } ?>
-            <?php } $ultimoid = $c['id_dados'];?>
+            <?php } if ($numcontent !=0){$ultimoid = $c['id_dados'];}?>
         </tbody>
     </table>
     
     
     
     <?php
-        if ($type == 1){
-            $stmt = $pdo->prepare("SELECT COUNT(*) FROM dados WHERE urls LIKE :nome");
-            $stmt->bindValue(':nome', '%' . $input . '%', PDO::PARAM_STR);
-            $stmt->execute();
-            $quant = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-            $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } else if ($type == 2) {
-            $stmt = $pdo->prepare("SELECT COUNT(*) FROM dados WHERE email LIKE :nome");
-            $stmt->bindValue(':nome', '%' . $input . '%', PDO::PARAM_STR);
-            $stmt->execute();
-            $quant = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } else if ($type == 3){
-            $stmt = $pdo->prepare("SELECT COUNT(*) FROM dados WHERE senha LIKE :nome");
-            $stmt->bindValue(':nome', '%' . $input . '%', PDO::PARAM_STR);
-            $stmt->execute();
-            $quant = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        }else {
-            $stmt = $pdo->prepare("SELECT COUNT(*) FROM id_dados WHERE email LIKE :nome");
-            $stmt->bindValue(':nome', '%' . $input . '%', PDO::PARAM_STR);
-            $stmt->execute();
-            $quant = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($funcnova == "off"){
+            if ($type == 1){
+                $stmt = $pdo->prepare("SELECT COUNT(*) FROM dados WHERE urls LIKE :nome");
+                $stmt->bindValue(':nome', '%' . $input . '%', PDO::PARAM_STR);
+                $stmt->execute();
+                $quant = $stmt->fetchColumn();
+            } else if ($type == 2) {
+                $stmt = $pdo->prepare("SELECT COUNT(*) FROM dados WHERE email LIKE :nome");
+                $stmt->bindValue(':nome', '%' . $input . '%', PDO::PARAM_STR);
+                $stmt->execute();
+                $quant = $stmt->fetchColumn();
+            } else if ($type == 3){
+                $stmt = $pdo->prepare("SELECT COUNT(*) FROM dados WHERE senha LIKE :nome");
+                $stmt->bindValue(':nome', '%' . $input . '%', PDO::PARAM_STR);
+                $stmt->execute();
+                $quant = $stmt->fetchColumn();
+            }else {
+                $stmt = $pdo->prepare("SELECT COUNT(*) FROM dados WHERE id_dados LIKE :nome");
+                $stmt->bindValue(':nome', '%' . $input . '%', PDO::PARAM_STR);
+                $stmt->execute();
+                $quant = $stmt->fetchColumn();
+            }
+            
+            echo "Total de resultados: " . $quant;
+            $npagina = ceil($quant / $quantidade);
         }
         
-        echo "Total de resultados: " . $quant[0]['COUNT(*)'];
-        $npagina = ceil($quant[0]['COUNT(*)'] / $quantidade);?>
+        ?>
 
-        <nav aria-label="Page navigation example">
+        <nav aria-label="Page_navigation">
         <ul class="pagination">
             
             
         
         <?php
-        if ($pagina != 1){
-            $prevpage = $pagina - 1;
-            echo "<li class='page-item'><a class='page-link' href='?nomesite=$input&tipopa=$type&pagina=$prevpage&qnts=$quantidade&ultimoid=$ultimoid&beta=$funcnova'>Anterior</a></li>";
-        }
-        
-        for ($n = 1; $n <= $npagina; $n++) {
-            if($n>=($pagina-5)&& $n <= ($pagina+5)){
-                if ($n == $pagina) {
-                    echo "<li class='page-item active'><span class='page-link'>$n</span></li>";
-                } else {
-                    echo "<li class='page-item'><a class='page-link' href='?nomesite=$input&tipopa=$type&pagina=$n&qnts=$quantidade&ultimoid=$ultimoid&beta=$funcnova'>$n</a></li>";
-                }
+        if ($funcnova == "off") {
+            if ($pagina != 1){
+                $prevpage = $pagina - 1;
+                echo "<li class='page-item'><a class='page-link' href='?nomesite=$input&tipopa=$type&pagina=$prevpage&qnts=$quantidade&ultimoid=$ultimoid&beta=$funcnova'>Anterior</a></li>";
             }
             
+            for ($n = 1; $n <= $npagina; $n++) {
+                if($n>=($pagina-5)&& $n <= ($pagina+5)){
+                    if ($n == $pagina) {
+                        echo "<li class='page-item active'><span class='page-link'>$n</span></li>";
+                    } else {
+                        echo "<li class='page-item'><a class='page-link' href='?nomesite=$input&tipopa=$type&pagina=$n&qnts=$quantidade&ultimoid=$ultimoid&beta=$funcnova'>$n</a></li>";
+                    }
+                }
+                
+            }
+            
+    
+            if ($pagina != $npagina){
+                $nextpage = $pagina + 1;
+                echo "<li class='page-item'><a class='page-link' href='?nomesite=$input&tipopa=$type&pagina=$nextpage&qnts=$quantidade&ultimoid=$ultimoid&beta=$funcnova'>Proxima</a></li>";
+            }
+        }else{
+            if ($numcontent == $quantidade){
+                $proxpage = "on";
+            }else {
+                $proxpage = "off";
+            }
+            if ($pagina == 1) {
+                echo "<li class='page-item active'><span class='page-link'>1</span></li>";
+            } else {
+                echo "<li class='page-item'><a class='page-link' href='?nomesite=$input&tipopa=$type&pagina=1&qnts=$quantidade&ultimoid=0&beta=$funcnova'>Voltar ao inicio</a></li>";
+            }
+            if ($proxpage == "on"){
+                $nextpage = $pagina + 1;
+                if ($pagina !=1){
+                    echo "<li class='page-item active'><a class='page-link' href='?nomesite=$input&tipopa=$type&pagina=$nextpage&qnts=$quantidade&ultimoid=$ultimoid&beta=$funcnova'>Proxima</a></li>";
+                }else {
+                    echo "<li class='page-item'><a class='page-link' href='?nomesite=$input&tipopa=$type&pagina=$nextpage&qnts=$quantidade&ultimoid=$ultimoid&beta=$funcnova'>Proxima</a></li>";
+                }
+            }else {
+                echo "<li class='page-item active'><a class='page-link'>Ultima Pagina</a></li>";
+            }
         }
         
-
-        if ($pagina != $npagina){
-            $nextpage = $pagina + 1;
-            echo "<li class='page-item'><a class='page-link' href='?nomesite=$input&tipopa=$type&pagina=$nextpage&qnts=$quantidade&ultimoid=$ultimoid&beta=$funcnova'>Proxima</a></li>";
-        }
 
     ?>
     </ul>
@@ -233,15 +262,15 @@ if ($funcnova == "off"){
             }
         }
         function mudarqntpagina() {
-    var qntsValue = $('#qnts').val();
+                var qntsValue = $('#qnts').val();
 
-    var novaURL = "?nomesite=" + encodeURIComponent("<?=$_GET['nomesite']?>") +
-              "&tipopa=" + encodeURIComponent("<?=$_GET['tipopa']?>") +
-              "&pagina=" + encodeURIComponent(1) +
-              "&qnts=" + encodeURIComponent(qntsValue) +  
-              "&ultimoid=" + encodeURIComponent(0) +
-              "&beta=" + encodeURIComponent("<?php echo $funcnova; ?>");
-window.location.href = novaURL;
+                var novaURL = "?nomesite=" + encodeURIComponent("<?=$_GET['nomesite']?>") +
+                        "&tipopa=" + encodeURIComponent("<?=$_GET['tipopa']?>") +
+                        "&pagina=" + encodeURIComponent(1) +
+                        "&qnts=" + encodeURIComponent(qntsValue) +  
+                        "&ultimoid=" + encodeURIComponent(0) +
+                        "&beta=" + encodeURIComponent("<?php echo $funcnova; ?>");
+                window.location.href = novaURL;
 
         }
 

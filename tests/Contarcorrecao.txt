@@ -1,6 +1,6 @@
 //comando substituto para colocar no lugar dos quatro tipos anteriores 
 
-$stmt = $pdo->prepare("SELECT COUNT(*) FROM id_dados WHERE TIPODEDADO LIKE :nome");
+$stmt = $pdo->prepare("SELECT COUNT(*) FROM dados WHERE TIPODEDADO LIKE :nome");
 $stmt->bindValue(':nome', '%' . $input . '%', PDO::PARAM_STR);
 $stmt->execute();
 $quant = $stmt->fetchColumn();

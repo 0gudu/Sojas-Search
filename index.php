@@ -66,7 +66,7 @@
                     <button type="submit" class="btn btn-primary">Pesquisar</button>
                 </div>
             </div>
-            <label for="beta">Função beta, tem bugs</label>
+            <label for="beta">Função mais leve</label>
             <input type="checkbox" id="beta" name="beta">
         </form>
     </div>
