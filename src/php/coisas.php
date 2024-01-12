@@ -1,15 +1,18 @@
 <?php 
 require_once "../includes/connec.php";
-
+if ($pr == 1){
+    header("location: config.php");
+}
 function limitarTexto($texto, $limite) {
     if (strlen($texto) > $limite) {
         $texto = substr($texto, 0, $limite) . '...';
     }
     return $texto;
 }
-
+//paginação normal
 $pagina = isset($_GET['pagina']) ? $_GET['pagina'] : 1;
-
+//paginação lites
+$numcontent = 0;
 
 $quantidade = intval($_GET['qnts']);
 
@@ -49,7 +52,7 @@ if ($funcnova == "off"){
         $sites = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }else {
-    $numcontent = 0;
+    
     if ($type == 1){
         $stmt = $pdo->prepare('SELECT * FROM dados WHERE id_dados > :ultimoid AND urls LIKE :input LIMIT :quantidade');
         $stmt->bindValue(':ultimoid', $ultimoid, PDO::PARAM_INT);

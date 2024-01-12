@@ -1,5 +1,9 @@
 <?php 
     require_once "src/includes/connec.php";
+    if ($pr == 1){
+        header("location: src/php/config.php");
+    }
+
     $stmt = $pdo->prepare("SELECT * FROM databasess");
     $stmt->execute();
     $nomes = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -7,7 +11,7 @@
         $stmt = $pdo->prepare("SHOW INDEX FROM dados");
         $stmt->execute();
         $idx = $stmt->rowCount();
-    
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
